@@ -15,9 +15,12 @@ RUN set -xe; \
   git clone https://github.com/nginx/unit src \
   && cd src \
   && ./configure \
-  && ./configure php \
-  && ./configure python \
+  && ./configure php    --module=php7     --config=php-config7    \
+  && ./configure python --module=python3  --config=python3-config \
   && make all \
   && make install DESTDIR=/usr/
 
-CMD ["/usr/sbin/unitd", "--no-daemon"]
+ADD unitd-entrypoint /usr/sbin/unitd-entrypoint
+
+ENTRYPOINT ["/usr/sbin/unitd-entrypoint"]
+CMD ["unitd", "--no-daemon"]
